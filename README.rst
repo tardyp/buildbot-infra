@@ -27,9 +27,27 @@ Before running the script, ensure:
 Development
 -----------
 
+Develpment is made easier with vagrant.
+
+First install a vagrant box with FreeBSD 10.3::
+
+    vagrant init freebsd/FreeBSD-10.3-RELEASE; vagrant up --provider virtualbox
+
+This vagrant box will be used to host all jails.
+
+Devel playbook is generated using following script::
+
+    python files/generate_devel.py
+
+This python script parses local.yml (prod) playbook and save it to devel.yml, but modify to do following:
+
+- remove 'connection: local' so that we can use ssh to connect to the files
+- keep only internal network ip addresses
+- add sshd role for all jails (to enable ansible)
+
 To develop a patch on a test system, set the system's base hostname to correspond to the host or jail you want to work on, and run the same command::
 
-    ansible-playbook local.yml
+    ansible-playbook devel.yml
 
 To avoid installing the Ansible crontask, add ``-e no_ansible_pull=true``.
 
